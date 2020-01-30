@@ -1,6 +1,6 @@
 {
   "type": "panel",
-  "name": "grafana-giphy-panel",
+  "name": "Giphy GIF",
   "id": "iz-grafana-giphy-panel",
   "info": {
     "description": "Grafana Giphy Panel",

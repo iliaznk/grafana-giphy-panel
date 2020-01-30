@@ -26,4 +26,4 @@ yarn build
 ```
 
 
-docker run -d -p 3000:3000 --name grafana-giphy-panel --volume /Users/iz/code/grafana-giphy-panel/dist:/var/lib/grafana/plugins/giphy-panel grafana/grafana
+docker run -d -p 3000:3000 --name grafana-giphy-panel -e GF_COOKIE_SAMESITE=none -e GF_COOKIE_SECURE=true --volume /Users/iz/code/grafana-giphy-panel/dist:/var/lib/grafana/plugins/giphy-panel grafana/grafana
