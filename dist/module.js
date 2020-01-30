@@ -97,7 +97,7 @@ define(["@grafana/data","@grafana/ui","react"], function(__WEBPACK_EXTERNAL_MODU
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "../node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(true);
 // Module
-exports.push([module.i, ".gp-container {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  margin: 0 auto; }\n\n.gp-spinner {\n  position: relative; }\n\n.gp-image {\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  font-size: 1.5rem;\n  color: red;\n  border-radius: 3px; }\n\n.gp-controls > button:last-of-type {\n  margin-left: 1rem; }\n", "",{"version":3,"sources":["style.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,cAAc,EAAE;;AAElB;EACE,kBAAkB,EAAE;;AAEtB;EACE,WAAW;EACX,YAAY;EACZ,kBAAkB;EAClB,iBAAiB;EACjB,UAAU;EACV,kBAAkB,EAAE;;AAEtB;EACE,iBAAiB,EAAE","file":"style.css","sourcesContent":[".gp-container {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  margin: 0 auto; }\n\n.gp-spinner {\n  position: relative; }\n\n.gp-image {\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  font-size: 1.5rem;\n  color: red;\n  border-radius: 3px; }\n\n.gp-controls > button:last-of-type {\n  margin-left: 1rem; }\n"]}]);
+exports.push([module.i, ".gp-container {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  margin: 0 auto; }\n\n.gp-spinner {\n  position: relative; }\n\n.gp-image {\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  font-size: 1.25rem;\n  border-radius: 3px;\n  white-space: pre-line; }\n\n.gp-controls > button:last-of-type {\n  margin-left: 1rem; }\n", "",{"version":3,"sources":["style.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,cAAc,EAAE;;AAElB;EACE,kBAAkB,EAAE;;AAEtB;EACE,WAAW;EACX,YAAY;EACZ,kBAAkB;EAClB,kBAAkB;EAClB,kBAAkB;EAClB,qBAAqB,EAAE;;AAEzB;EACE,iBAAiB,EAAE","file":"style.css","sourcesContent":[".gp-container {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  margin: 0 auto; }\n\n.gp-spinner {\n  position: relative; }\n\n.gp-image {\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  font-size: 1.25rem;\n  border-radius: 3px;\n  white-space: pre-line; }\n\n.gp-controls > button:last-of-type {\n  margin-left: 1rem; }\n"]}]);
 // Exports
 module.exports = exports;
 
@@ -951,17 +951,24 @@ function __importDefault(mod) {
 /*!**********************!*\
   !*** ./constants.ts ***!
   \**********************/
-/*! exports provided: GIPHY_API_KEY, EDITOR_SECTION_HEADING, EDITOR_SEARCH_TIMEOUT */
+/*! exports provided: GIPHY_API_KEY, EDITOR_TEXT_HEADING, EDITOR_PAGINATOR_HEADING, EDITOR_SEARCH_TIMEOUT, PANEL_EMPTY_STRING, PANEL_NO_RESULTS */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GIPHY_API_KEY", function() { return GIPHY_API_KEY; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EDITOR_SECTION_HEADING", function() { return EDITOR_SECTION_HEADING; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EDITOR_TEXT_HEADING", function() { return EDITOR_TEXT_HEADING; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EDITOR_PAGINATOR_HEADING", function() { return EDITOR_PAGINATOR_HEADING; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EDITOR_SEARCH_TIMEOUT", function() { return EDITOR_SEARCH_TIMEOUT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PANEL_EMPTY_STRING", function() { return PANEL_EMPTY_STRING; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PANEL_NO_RESULTS", function() { return PANEL_NO_RESULTS; });
 var GIPHY_API_KEY = 'zqCfzWr5pIIFmlAzRcSgP1ZTXSeu35hS';
-var EDITOR_SECTION_HEADING = 'Search query';
+var EDITOR_TEXT_HEADING = 'Search Query';
+var EDITOR_PAGINATOR_HEADING = 'Browse Results';
 var EDITOR_SEARCH_TIMEOUT = 500; // ms
+
+var PANEL_EMPTY_STRING = 'Please, type a search phrase in the "Search Query" editor field.\nBrowse search results with the left/right buttons.';
+var PANEL_NO_RESULTS = 'You\'d better try something else... 🤔';
 
 /***/ }),
 
@@ -994,17 +1001,64 @@ function (_super) {
   function GiphyEditor() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
 
-    _this.onTextChanged = function (_a) {
-      var target = _a.target;
+    _this.timeout = 0;
 
-      _this.props.onOptionsChange(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, _this.props.options), {
-        text: target.value,
-        offset: 0
-      }));
+    _this.search = function () {
+      var _a = _this.props,
+          options = _a.options,
+          onOptionsChange = _a.onOptionsChange;
+
+      if (!options.text) {
+        return;
+      }
+
+      onOptionsChange(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, options), {
+        isLoading: true
+      }), function () {
+        fetch("https://api.giphy.com/v1/gifs/search?q=" + options.text + "&api_key=" + _constants__WEBPACK_IMPORTED_MODULE_3__["GIPHY_API_KEY"] + "&limit=2&offset=" + options.offset).then(function (response) {
+          return response.json();
+        }).then(function (jsonData) {
+          var data = jsonData.data,
+              pagination = jsonData.pagination;
+          var url = undefined;
+          var hasNext = false;
+
+          if (data.length) {
+            url = data[0].images.original.url;
+            hasNext = pagination.count > 1;
+          }
+
+          var newOptions = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, _this.props.options), {
+            url: url,
+            isLoading: false,
+            hasNext: hasNext
+          });
+
+          onOptionsChange(newOptions);
+        });
+      });
+    };
+
+    _this.handleQueryChange = function (_a) {
+      var target = _a.target;
+      var text = _this.props.options.text;
+      var value = target.value;
+
+      if (text === value) {
+        return;
+      }
+
+      clearTimeout(_this.timeout); // @ts-ignore
+
+      _this.timeout = setTimeout(function () {
+        _this.props.onOptionsChange(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, _this.props.options), {
+          text: value,
+          offset: 0
+        }));
+      }, _constants__WEBPACK_IMPORTED_MODULE_3__["EDITOR_SEARCH_TIMEOUT"]);
     };
 
     _this.handleOffsetInc = function () {
-      console.log('HANDLE INC');
       var _a = _this.props,
           onOptionsChange = _a.onOptionsChange,
           options = _a.options;
@@ -1014,7 +1068,6 @@ function (_super) {
     };
 
     _this.handleOffsetDec = function () {
-      console.log('HANDLE DEC');
       var _a = _this.props,
           onOptionsChange = _a.onOptionsChange,
           options = _a.options;
@@ -1026,50 +1079,51 @@ function (_super) {
     return _this;
   }
 
-  GiphyEditor.prototype.componentDidUpdate = function (prevProps, prevState) {
-    console.log('EDITOR DID UPDATE');
-    console.log('PROPS', this.props.options);
-    console.log('PREV PROPS', prevProps.options);
+  GiphyEditor.prototype.componentDidMount = function () {
+    this.search();
   };
 
-  GiphyEditor.prototype.componentDidMount = function () {
-    var _this = this;
+  GiphyEditor.prototype.componentDidUpdate = function (prevProps, prevState) {
+    var _a = this.props.options,
+        text = _a.text,
+        offset = _a.offset;
+    var _b = prevProps.options,
+        prevText = _b.text,
+        prevOffset = _b.offset;
 
-    setTimeout(function () {
-      console.log('====> TIMEOUT');
+    if (offset !== prevOffset || text !== prevText) {
+      this.search();
+    }
+  };
 
-      _this.props.onOptionsChange(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, _this.props.options), {
-        hasNext: true
-      }));
-    }, 3000);
+  GiphyEditor.prototype.componentWillUnmount = function () {
+    clearTimeout(this.timeout);
   };
 
   GiphyEditor.prototype.render = function () {
-    console.log('EDITOR PROPS', this.props);
     var _a = this.props.options,
         text = _a.text,
         offset = _a.offset,
         hasNext = _a.hasNext;
     var hasPrev = offset > 0;
-    console.log('HAS NEXT', hasNext);
     return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "gf-form"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "section gf-form-group"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h5", {
       className: "section-heading"
-    }, _constants__WEBPACK_IMPORTED_MODULE_3__["EDITOR_SECTION_HEADING"]), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["FormField"], {
+    }, _constants__WEBPACK_IMPORTED_MODULE_3__["EDITOR_TEXT_HEADING"]), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["FormField"], {
       label: "Text",
       labelWidth: 5,
       inputWidth: 20,
       type: "text",
-      onChange: this.onTextChanged,
-      value: text || ''
+      onChange: this.handleQueryChange,
+      defaultValue: text || ''
     })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "section gp-controls"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h5", {
       className: "section-heading"
-    }, "Choose image"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["Button"], {
+    }, _constants__WEBPACK_IMPORTED_MODULE_3__["EDITOR_PAGINATOR_HEADING"]), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["Button"], {
       icon: "fa fa-chevron-left",
       variant: "secondary",
       size: "md",
@@ -1106,9 +1160,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _grafana_ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @grafana/ui */ "@grafana/ui");
 /* harmony import */ var _grafana_ui__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./constants */ "./constants.ts");
-/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./style.css */ "./style.css");
-/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_style_css__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./style.css */ "./style.css");
+/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_style_css__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./constants */ "./constants.ts");
 
 /* tslint:disable */
 
@@ -1125,90 +1179,28 @@ function (_super) {
   function GiphyPanel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
 
-    _this.timeout = 0;
     _this.state = {
       url: undefined,
       isLoading: true,
       query: ''
     };
-
-    _this.search = function () {
-      var _a = _this.props,
-          options = _a.options,
-          onOptionsChange = _a.onOptionsChange;
-
-      _this.setState({
-        isLoading: true,
-        query: options.text
-      }, function () {
-        fetch("https://api.giphy.com/v1/gifs/search?q=" + options.text + "&api_key=" + _constants__WEBPACK_IMPORTED_MODULE_3__["GIPHY_API_KEY"] + "&limit=2&offset=" + options.offset).then(function (response) {
-          return response.json();
-        }).then(function (jsonData) {
-          var data = jsonData.data,
-              pagination = jsonData.pagination;
-          var url = undefined;
-          var hasNext = false;
-          console.log('DATA', data.length);
-          console.log('PAGINATION', pagination);
-
-          if (data.length) {
-            url = data[0].images.original.url;
-            hasNext = pagination.count > 1;
-          }
-
-          var newOptions = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, options), {
-            hasNext: hasNext
-          });
-
-          console.log('NEW OPTIONS', newOptions);
-          onOptionsChange(newOptions);
-
-          _this.setState({
-            url: url,
-            isLoading: false
-          });
-        });
-      });
-    };
-
     return _this;
   }
 
-  GiphyPanel.prototype.componentDidMount = function () {
-    this.search();
-  };
-
   GiphyPanel.prototype.componentDidUpdate = function (prevProps, prevState) {
-    var _a = this.props.options,
-        text = _a.text,
-        offset = _a.offset;
-    var _b = prevProps.options,
-        prevText = _b.text,
-        prevOffset = _b.offset;
-    console.log('DID UPDATE');
-    console.log('PROPS', this.props.options);
-    console.log('PREV PROPS', prevProps.options);
+    var url = this.props.options.url;
+    var prevUrl = prevProps.options.url;
 
-    if (text === prevText && offset === prevOffset) {
+    if (url === prevUrl) {
       return;
-    }
-
-    if (text !== prevText) {
-      clearTimeout(this.timeout); // @ts-ignore
-
-      this.timeout = setTimeout(this.search, _constants__WEBPACK_IMPORTED_MODULE_3__["EDITOR_SEARCH_TIMEOUT"]);
-    }
-
-    if (offset !== prevOffset) {
-      this.search();
     }
   };
 
   GiphyPanel.prototype.renderImage = function () {
-    var _a = this.state,
+    var _a = this.props.options,
         url = _a.url,
         isLoading = _a.isLoading,
-        query = _a.query;
+        text = _a.text;
 
     if (isLoading) {
       return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["Spinner"], {
@@ -1216,12 +1208,24 @@ function (_super) {
       });
     }
 
+    if (!text) {
+      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+        className: "gp-image"
+      }, _constants__WEBPACK_IMPORTED_MODULE_4__["PANEL_EMPTY_STRING"]);
+    }
+
+    if (!url) {
+      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+        className: "gp-image"
+      }, _constants__WEBPACK_IMPORTED_MODULE_4__["PANEL_NO_RESULTS"]);
+    }
+
     return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       style: {
         background: "url(" + url + ") center / cover no-repeat"
       },
       className: "gp-image"
-    }, url ? '' : "No results for \"" + query + "\".");
+    });
   };
 
   GiphyPanel.prototype.render = function () {
@@ -1309,9 +1313,10 @@ if(false) {}
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaults", function() { return defaults; });
 var defaults = {
-  text: 'kitties',
+  text: '',
   offset: 0,
-  hasNext: false
+  hasNext: false,
+  isLoading: false
 };
 
 /***/ }),

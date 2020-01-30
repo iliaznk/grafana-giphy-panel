@@ -24,3 +24,6 @@ To build the plugin run:
 ```
 yarn build
 ```
+
+
+docker run -d -p 3000:3000 --name grafana-giphy-panel --volume /Users/iz/code/grafana-giphy-panel/dist:/var/lib/grafana/plugins/giphy-panel grafana/grafana
