@@ -1026,6 +1026,24 @@ function (_super) {
     return _this;
   }
 
+  GiphyEditor.prototype.componentDidUpdate = function (prevProps, prevState) {
+    console.log('EDITOR DID UPDATE');
+    console.log('PROPS', this.props.options);
+    console.log('PREV PROPS', prevProps.options);
+  };
+
+  GiphyEditor.prototype.componentDidMount = function () {
+    var _this = this;
+
+    setTimeout(function () {
+      console.log('====> TIMEOUT');
+
+      _this.props.onOptionsChange(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, _this.props.options), {
+        hasNext: true
+      }));
+    }, 3000);
+  };
+
   GiphyEditor.prototype.render = function () {
     console.log('EDITOR PROPS', this.props);
     var _a = this.props.options,
@@ -1067,7 +1085,7 @@ function (_super) {
   };
 
   return GiphyEditor;
-}(react__WEBPACK_IMPORTED_MODULE_1__["PureComponent"]);
+}(react__WEBPACK_IMPORTED_MODULE_1___default.a.Component);
 
 
 
@@ -1111,7 +1129,6 @@ function (_super) {
     _this.state = {
       url: undefined,
       isLoading: true,
-      hasNext: false,
       query: ''
     };
 

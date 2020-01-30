@@ -13,7 +13,6 @@ export class GiphyPanel extends PureComponent<Props> {
   state = {
     url: undefined,
     isLoading: true,
-    hasNext: false,
     query: '',
   };
 

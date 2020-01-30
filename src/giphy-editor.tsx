@@ -1,11 +1,27 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import {Button, FormField } from '@grafana/ui';
 import { PanelEditorProps } from '@grafana/data';
 
 import { GiphyOptions } from './types';
 import { EDITOR_SECTION_HEADING } from "./constants";
 
-export class GiphyEditor extends PureComponent<PanelEditorProps<GiphyOptions>> {
+export class GiphyEditor extends React.Component<PanelEditorProps<GiphyOptions>, any> {
+  componentDidUpdate(prevProps: Readonly<PanelEditorProps>, prevState: Readonly<{}>): void {
+    console.log('EDITOR DID UPDATE');
+    console.log('PROPS', this.props.options);
+    console.log('PREV PROPS', prevProps.options);
+  }
+
+  componentDidMount(): void {
+    setTimeout(() => {
+      console.log('====> TIMEOUT');
+      this.props.onOptionsChange({
+        ...this.props.options,
+        hasNext: true
+      })
+    }, 3000);
+  }
+
   onTextChanged = ({ target }: any) => {
     this.props.onOptionsChange({ ...this.props.options, text: target.value, offset: 0 });
   };
