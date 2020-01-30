@@ -1038,6 +1038,11 @@ function (_super) {
         });
       });
     };
+    /**
+     * Handles typing in the search query editor field.
+     * Uses debouncing technique to respond only after a period of time has passed since the last event.
+     */
+
 
     _this.handleQueryChange = function (_a) {
       var target = _a.target;
@@ -1120,7 +1125,7 @@ function (_super) {
       onChange: this.handleQueryChange,
       defaultValue: text || ''
     })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "section gp-controls"
+      className: "section gf-form-group gp-controls"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h5", {
       className: "section-heading"
     }, _constants__WEBPACK_IMPORTED_MODULE_3__["EDITOR_PAGINATOR_HEADING"]), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["Button"], {
@@ -1164,8 +1169,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_style_css__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./constants */ "./constants.ts");
 
-/* tslint:disable */
-
 
 
 
@@ -1177,14 +1180,7 @@ function (_super) {
   Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(GiphyPanel, _super);
 
   function GiphyPanel() {
-    var _this = _super !== null && _super.apply(this, arguments) || this;
-
-    _this.state = {
-      url: undefined,
-      isLoading: true,
-      query: ''
-    };
-    return _this;
+    return _super !== null && _super.apply(this, arguments) || this;
   }
 
   GiphyPanel.prototype.componentDidUpdate = function (prevProps, prevState) {

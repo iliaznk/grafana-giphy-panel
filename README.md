@@ -1,29 +1,25 @@
-# Simple React Panel
+# Giphy Panel
 
-This is just a stub to show how you can create a basic visualization plugin.
+A Grafana panel plugin that displays an image from Giphy found by a search phrase.
 
-First, install dependencies:
-```
-yarn install
-```
+## Usage
 
-To work with this plugin run:
-```
-yarn dev
-```
+1. Install the plugin into Grafana.
+2. Create a new dashboard or add a panel to an existing one and select "Choose Visualization".
+3. Find and select "Giphy GIF" plugin.
+4. Use the "Search Query" field as well as "Browse Results" buttons to find an image you like.
+5. Save your dashboard.
 
-or
-```
-yarn watch
-```
+## Docker Image
 
-This will run linting tools and apply prettier fix.
+A quick way to see the plugin in action is to run a Docker container with the plugin pre-installed:
 
-
-To build the plugin run:
-```
-yarn build
+```bash
+docker run -d -p 3000:3000 --name grafana-giphy iznk/grafana-giphy-panel:1.0
 ```
 
+Then just go to http://localhost:3000 and follow the usage instructions starting from item 2.
 
-docker run -d -p 3000:3000 --name grafana-giphy-panel -e GF_COOKIE_SAMESITE=none -e GF_COOKIE_SECURE=true --volume /Users/iz/code/grafana-giphy-panel/dist:/var/lib/grafana/plugins/giphy-panel grafana/grafana
+## Potential Improvements
+
+If I had a bit more time the next thing I'd add to the plugin is network/API error-handling. Having my Giphy API key in the source code isn't a very good idea either... In real world it must be either provided by a secret management tool or the users could be required to provide their own keys for the plugin to work. 

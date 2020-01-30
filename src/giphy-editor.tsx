@@ -62,6 +62,10 @@ export class GiphyEditor extends React.Component<PanelEditorProps<GiphyOptions>,
       });
   };
 
+  /**
+   * Handles typing in the search query editor field.
+   * Uses debouncing technique to respond only after a period of time has passed since the last event.
+   */
   handleQueryChange = ({ target }: any) => {
     const { text } = this.props.options;
     const { value } = target;
@@ -103,7 +107,8 @@ export class GiphyEditor extends React.Component<PanelEditorProps<GiphyOptions>,
           <h5 className="section-heading">{EDITOR_TEXT_HEADING}</h5>
           <FormField label="Text" labelWidth={5} inputWidth={20} type="text" onChange={this.handleQueryChange} defaultValue={text || ''} />
         </div>
-        <div className="section gp-controls">
+
+        <div className="section gf-form-group gp-controls">
           <h5 className="section-heading">{EDITOR_PAGINATOR_HEADING}</h5>
           <Button icon="fa fa-chevron-left" variant="secondary" size="md" disabled={!hasPrev} onClick={this.handleOffsetDec}/>
           <Button icon="fa fa-chevron-right" variant="secondary" size="md" disabled={!hasNext} onClick={this.handleOffsetInc}/>

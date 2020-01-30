@@ -1,4 +1,3 @@
-/* tslint:disable */
 import React, { PureComponent } from 'react';
 import { PanelProps } from '@grafana/data';
 import { Spinner } from "@grafana/ui";
@@ -9,12 +8,6 @@ import {PANEL_EMPTY_STRING, PANEL_NO_RESULTS} from "./constants";
 interface Props extends PanelProps<GiphyOptions> {}
 
 export class GiphyPanel extends PureComponent<Props> {
-  state = {
-    url: undefined,
-    isLoading: true,
-    query: '',
-  };
-
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<{}>): void {
     const {options: { url } } = this.props;
     const {options: { url: prevUrl } } = prevProps;
